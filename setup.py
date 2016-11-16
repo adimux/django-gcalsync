@@ -8,7 +8,7 @@ setup(
         version = "0.1.0",
         description = "A Django application to sync with GCal.",
         author = "Jonathon Morgan",
-        author_email = "jonathon@newknowledge.com"
+        author_email = "jonathon@newknowledge.com",
         url = "https://github.com/gati",
         classifiers = [
             'Environment :: Web Environment',
