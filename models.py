@@ -27,3 +27,5 @@ class SyncedEvent(models.Model):
 
     def __unicode__(self):
         return '%s from %s' %(self.gcal_event_id, self.synced_calendar.calendar_id)
+
+

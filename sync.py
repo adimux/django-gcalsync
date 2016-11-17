@@ -46,6 +46,7 @@ class Synchronizer(object):
         return synced_calendar
 
     def sync(self):
+        # get connection from user or credentials model
         Retriever().get_event_list(connection=Connection(), 
             calendar_id=self.calendar_id, 
             processor=self.process,
@@ -69,10 +70,11 @@ class Synchronizer(object):
             synced_event = SyncedEvent.objects.get(gcal_event_id=gcal_event_id)
             event_model = synced_event.content_object
 
-            for key,val in model_data.iteritems():
-                setattr(event_model, key, val)
+            event_model.objects.create(model_data)
+            # for key,val in model_data.iteritems():
+            #    setattr(event_model, key, val)
 
-            event_model.save()
+            # event_model.save()
 
         except SyncedEvent.DoesNotExist:
             synced_event = SyncedEvent(gcal_event_id=gcal_event_id,

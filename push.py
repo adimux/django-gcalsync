@@ -29,6 +29,10 @@ class Pusher(object):
         return event_data
 
     def create_or_update(self):
+        # TODO : How To Get Credentials ?
+        # From EventEntity, get user model and then credentials
+        # From EventEntity, get associated calendar
+        # and then credentials
         service = Connection().get_service()
         content_type = ContentType.objects.get_for_model(self.model)
         event_data = self.get_event_data()

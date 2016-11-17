@@ -6,6 +6,7 @@ _consumer_manager = ConsumerManager()
 _task_manager = TaskManager()
 _register = Register()
 
+# Add a user or a local calendar
 def register(calendar_id, transformers):
     _register.register(calendar_id, transformers)
 
