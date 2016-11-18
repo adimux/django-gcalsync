@@ -3,8 +3,9 @@ from setuptools import find_packages
 
 
 setup(
-        name = "django-gcalsync",
-        packages=find_packages(),
+        name = "gcalsync",
+        # packages=find_packages(),
+        packages=["gcalsync"]
         version = "0.1.0",
         description = "A Django application to sync with GCal.",
         author = "Jonathon Morgan",
