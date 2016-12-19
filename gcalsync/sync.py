@@ -37,17 +37,21 @@ class Synchronizer(object):
     def __init__(self, **kwargs):
         self.calendar_id = kwargs['calendar_id']
         self.transformer = kwargs['transformer']
+        self.context = dict(calendar_id=self.calendar_id)
         self.synced_calendar = self.setup_synced_calendar()
 
     def setup_synced_calendar(self):
+        synced_calendar = SyncedCalendar.objects.get(calendar_id=self.calendar_id)
+        return synced_calendar
         synced_calendar, created = SyncedCalendar.objects.get_or_create(
             calendar_id=self.calendar_id)
 
         return synced_calendar
 
     def sync(self):
+        connection = Connection(context=self.context)
         # get connection from user or credentials model
-        Retriever().get_event_list(connection=Connection(), 
+        Retriever().get_event_list(connection=connection,
             calendar_id=self.calendar_id, 
             processor=self.process,
             post_retrieval=self.post_retrieval)
@@ -57,7 +61,7 @@ class Synchronizer(object):
         self.synced_calendar.save()
 
     def get_model_data(self, event_data):
-        return self.transformer.transform(event_data)
+        return self.transformer.transform(event_data, context=self.context)
 
     def extract_gcal_data(self, model_data):
         gcal_event_id = model_data.pop('event_id', None)
@@ -71,6 +75,7 @@ class Synchronizer(object):
             event_model = synced_event.content_object
 
             event_model.objects.create(model_data)
+
             # for key,val in model_data.iteritems():
             #    setattr(event_model, key, val)
 
@@ -80,6 +85,9 @@ class Synchronizer(object):
             synced_event = SyncedEvent(gcal_event_id=gcal_event_id,
                 origin='google')
             event_model = self.transformer.model.objects.create(**model_data)
+            self.transformer.post_transform(
+                event_model, 
+                synced_calendar=self.synced_calendar)
             synced_event.content_object = event_model
             synced_event.synced_calendar = self.synced_calendar
             synced_event.save()

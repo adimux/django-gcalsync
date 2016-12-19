@@ -24,3 +24,6 @@ class BaseTransformer(object):
             return False
 
         return True
+    
+    def post_transform(self, created_event, synced_calendar=None):
+        raise NotImplementedError("Subclasses must implement post_transform method")

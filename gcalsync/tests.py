@@ -3,7 +3,7 @@ import rfc3339
 
 from django.test import TestCase
 from django.db import models, connection
-from django.utils import simplejson
+import simplejson
 
 from gcalsync.transformation import BaseTransformer
 from gcalsync.sync import Synchronizer
@@ -79,7 +79,19 @@ class TestTransformer(BaseTransformer):
             'event_id': event_data['id']
         }
 
-class SynchronizerTest(TestCase):
+
+class BaseTestCase(TestCase):
+    def setUp(self):
+        self.modify_settings(
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': 'testdatabase',
+                }
+            })
+
+
+class SynchronizerTest(BaseTestCase):
     def setUp(self):
         super(SynchronizerTest, self).setUp()
 
@@ -110,7 +122,7 @@ class SynchronizerTest(TestCase):
         self.assertEqual(synced_event.content_object.title, sample_event_data['summary'])
 
 
-class PusherTest(TestCase):
+class PusherTest(BaseTestCase):
     def setUp(self):
         super(PusherTest, self).setUp()
 

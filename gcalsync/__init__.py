@@ -10,5 +10,9 @@ _register = Register()
 def register(calendar_id, transformers):
     _register.register(calendar_id, transformers)
 
+def register_group(calendar_group_id, transformers):
+    _register.register_group(calendar_group_id, transformers)
+
 _consumer_manager.autodiscover()
 _task_manager.setup_tasks(_register.consumers)
+_task_manager.setup_group_tasks(_register.consumers_groups)
